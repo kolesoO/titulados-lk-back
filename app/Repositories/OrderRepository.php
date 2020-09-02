@@ -17,6 +17,7 @@ class OrderRepository extends Base
     public function createModel(Model $user, array $attributes = []): Order
     {
         $entity = new Order($attributes);
+        $entity->status = Order::NEW_STATUS;
         $entity->student()->associate($user);
 
         return $entity;
