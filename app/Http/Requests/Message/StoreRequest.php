@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Faculty;
+namespace App\Http\Requests\Message;
 
 use App\Http\Requests\Request;
 
-class CreateRequest extends Request
+class StoreRequest extends Request
 {
     public function rules(): array
     {
         return [
-            'caption' => 'required',
+            'text' => 'required|string',
         ];
     }
 }

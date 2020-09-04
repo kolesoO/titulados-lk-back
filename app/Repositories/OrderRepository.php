@@ -17,6 +17,7 @@ class OrderRepository extends Base
     public function createModel(Model $user, array $attributes = []): Order
     {
         $entity = new Order($attributes);
+        $entity->status = Order::NEW_STATUS;
         $entity->student()->associate($user);
 
         return $entity;
@@ -37,6 +38,14 @@ class OrderRepository extends Base
     {
         /** @var Order $result */
         $result = $user->orders()->findOrFail($id);
+
+        return $result;
+    }
+
+    public function findForUser(int $id, HasUserType $user): ?Order
+    {
+        /** @var Order|null $result */
+        $result = $user->orders()->find($id);
 
         return $result;
     }

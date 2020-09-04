@@ -16,17 +16,11 @@ class CreateMessagesTable extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('created_at');
-            $table->unsignedInteger('student_id')->nullable();
-            $table->unsignedInteger('teacher_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
             $table->unsignedInteger('order_id')->nullable();
             $table->text('message')->nullable();
 
-            $table->foreign('student_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('restrict');
-
-            $table->foreign('teacher_id')
+            $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('restrict');

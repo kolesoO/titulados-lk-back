@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFacultiesDictionaryTable extends Migration
+class CreateSubjectGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,9 @@ class CreateFacultiesDictionaryTable extends Migration
      */
     public function up()
     {
-        Schema::create('faculties_dictionary', function (Blueprint $table) {
+        Schema::create('subject_groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('created_at')->default(
-                DB::raw('CURRENT_TIMESTAMP')
-            );
+            $table->timestamps();
             $table->string('caption')->unique()->nullable();
         });
     }
@@ -30,6 +28,6 @@ class CreateFacultiesDictionaryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('faculties_dictionary');
+        Schema::dropIfExists('subject_groups');
     }
 }

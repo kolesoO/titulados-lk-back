@@ -22,7 +22,7 @@ class TeacherInfo extends Model implements HasUserType
     protected $table = 'teachers_info';
 
     /** @inheritDoc */
-    protected $fillable = [];
+    protected $fillable = ['id'];
 
     public function user(): BelongsTo
     {

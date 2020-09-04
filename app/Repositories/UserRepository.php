@@ -10,6 +10,8 @@ use App\DTO\User\Settings;
 use App\Models\StudentInfo;
 use App\Models\TeacherInfo;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
@@ -142,5 +144,17 @@ class UserRepository extends Base
     public function isTeacher(User $entity): bool
     {
         return $entity->type === User::TEACHER_TYPE;
+    }
+
+    /**
+     * @return Collection|StudentInfo[]
+     */
+    public function getActiveStudents(): Collection
+    {
+        return StudentInfo::query()
+            ->whereHas('user', static function (Builder $builder) {
+                $builder->whereNull('deleted_at');
+            })
+            ->get();
     }
 }
