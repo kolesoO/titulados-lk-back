@@ -17,8 +17,18 @@ Route::middleware('auth:api')
             Route::post('me', 'UserController@updateMe');
             Route::post('change-password', 'UserController@changePassword');
 
-            Route::get('faculty', 'FacultyController@index');
-            Route::post('faculty', 'FacultyController@store');
+            Route::group(['prefix' => 'subject-group'], function (Router $router) {
+                $router->get('', 'SubjectGroupController@index');
+                $router->post('', 'SubjectGroupController@store');
+                $router->group(['prefix' => '{groupId}'], function (Router $router) {
+                    $router->get('', 'SubjectGroupController@show');
+
+                    $router->group(['prefix' => 'subject'], function (Router $router) {
+                        $router->get('', 'SubjectController@index');
+                        $router->post('', 'SubjectController@store');
+                    });
+                });
+            });
 
             Route::group(['prefix' => 'my', 'as' => 'my.'], function (Router $router) {
                 $router->get('orders', 'OrderController@my');
@@ -31,6 +41,9 @@ Route::middleware('auth:api')
                             $router->get('docs', 'OrderDocController@my');
                             $router->post('docs', 'OrderDocController@storeMy');
                         });
+                    });
+                    $router->group(['prefix' => 'messages'], function (Router $router) {
+                        $router->post('', 'MessageController@store');
                     });
                 });
             });

@@ -9,24 +9,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property-read int $id
  * @property-read Carbon $created_at
- * @property-read User $student
- * @property-read User $teacher
+ * @property-read User $user
  * @property-read Order $order
- * @property-read string $message
+ * @property-read string $text
  */
 class Message extends Model
 {
+    public const UPDATED_AT = null;
+
     /** @inheritDoc */
     protected $table = 'messages';
 
-    public function student(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'student_id');
-    }
+    /** @inheritDoc */
+    protected $fillable = ['message'];
 
-    public function teacher(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'teacher_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function order(): BelongsTo

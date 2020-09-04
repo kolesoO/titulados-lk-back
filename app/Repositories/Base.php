@@ -26,6 +26,11 @@ abstract class Base
         $this->modelInstance = $reflection->newInstance();
     }
 
+    public function getModelInstance(): Model
+    {
+        return $this->modelInstance;
+    }
+
     public function newQuery(): Builder
     {
         return $this->modelInstance->newQuery();

@@ -304,9 +304,9 @@ paths:
               example:
                 value:
                   password: '123'
-  /api/v1/faculty:
+  /api/v1/subject-group:
     get:
-      summary: faculty list
+      summary: Subject group list
       tags:
         - faculty
       responses:
@@ -320,20 +320,24 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Faculty'
+                      $ref: '#/components/schemas/Subject-group'
               examples:
                 example:
                   value:
                     data:
                       - id: 1
-                        created_at: '2020-08-06 01:49:15'
-                        caption: test
+                        created_at: '2020-09-04T14:05:35.000000Z'
+                        updated_at: '2020-09-04T14:05:35.000000Z'
+                        caption: maths
+                        subjects:
+                          - id: 1
+                            created_at: '2020-09-04T14:24:42.000000Z'
+                            caption: subject of maths 1
+                            group_id: 1
       operationId: get-api-v1-faculty
-      description: Get faculty list
+      description: Get subject group list
     post:
-      summary: update or create faculty
-      tags:
-        - faculty
+      summary: Create Subject group
       responses:
         '200':
           description: OK
@@ -343,15 +347,18 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Faculty'
+                    $ref: '#/components/schemas/Subject-group'
               examples:
                 example:
                   value:
-                    id: 1
-                    created_at: '2020-08-06 01:49:15'
-                    caption: test
+                    data:
+                      caption: maths3
+                      updated_at: '2020-09-04T15:04:23.000000Z'
+                      created_at: '2020-09-04T15:04:23.000000Z'
+                      id: 3
+                      subjects: []
         '422':
-          description: Unprocessable Entity (WebDAV)
+          description: Unprocessable Entity
           content:
             application/json:
               schema:
@@ -364,6 +371,10 @@ paths:
                   value:
                     caption:
                       - The caption field is required.
+            application/xml:
+              schema:
+                type: object
+                properties: {}
       operationId: post-api-v1-faculty
       requestBody:
         content:
@@ -379,6 +390,22 @@ paths:
               example:
                 value:
                   caption: some caption
+          application/javascript:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+              required:
+                - caption
+            examples:
+              example:
+                value:
+                  caption: some caption
+      description: Create new subject group
+      tags:
+        - subjects
+    parameters: []
   /api/v1/my/orders:
     get:
       summary: Order list
@@ -716,6 +743,123 @@ paths:
                 value:
                   commnent: some comment
                   attachment: '<binnary_file_content>'
+  '/api/v1/subject-group/{groupId}':
+    parameters:
+      - schema:
+          type: string
+        name: groupId
+        in: path
+        required: true
+    get:
+      summary: Subject group item info
+      tags:
+        - subjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Subject-group'
+              examples:
+                example:
+                  value:
+                    data:
+                      id: 1
+                      created_at: '2020-09-04T14:05:35.000000Z'
+                      updated_at: '2020-09-04T14:05:35.000000Z'
+                      caption: maths
+                      subjects:
+                        - id: 1
+                          created_at: '2020-09-04T14:24:42.000000Z'
+                          caption: subject of maths 1
+                          group_id: 1
+      operationId: get-api-v1-subject-group-groupId
+      description: Get subject group element info
+  '/api/v1/subject-group/{groupId}/subject':
+    parameters:
+      - schema:
+          type: string
+        name: groupId
+        in: path
+        required: true
+    get:
+      summary: Get subjects of group
+      tags:
+        - subjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Subject'
+              examples:
+                example:
+                  value:
+                    data:
+                      - id: 1
+                        created_at: '2020-09-04T14:24:42.000000Z'
+                        caption: subject of maths 1
+                        group_id: 1
+      operationId: get-api-v1-subject-group-groupId-subject
+    post:
+      summary: Greate subject of group
+      tags:
+        - subjects
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Subject'
+              examples:
+                example:
+                  value:
+                    data:
+                      caption: subject of maths2
+                      group_id: 1
+                      created_at: '2020-09-04T15:09:46.000000Z'
+                      id: 2
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                example:
+                  value:
+                    caption:
+                      - The caption field is required.
+      operationId: post-api-v1-subject-group-groupId-subject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+              required:
+                - caption
+            examples:
+              example:
+                value:
+                  caption: some caption
 components:
   schemas:
     User:
@@ -769,21 +913,6 @@ components:
             - 1
             - 2
             - 3
-    Faculty:
-      title: Faculty
-      type: object
-      properties:
-        id:
-          type: integer
-        created_at:
-          type: string
-        caption:
-          type: string
-      x-examples:
-        example:
-          id: 1
-          created_at: '2020-08-06 01:49:15'
-          caption: test
     Order:
       title: Order
       type: object
@@ -851,3 +980,48 @@ components:
           type: string
         path:
           type: string
+    Subject:
+      title: Subject
+      type: object
+      x-examples:
+        example:
+          id: 1
+          created_at: '2020-09-04T14:24:42.000000Z'
+          caption: subject of maths 1
+          group_id: 1
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        caption:
+          type: string
+        group_id:
+          type: integer
+    Subject-group:
+      title: Subject-group
+      type: object
+      x-examples:
+        example:
+          id: 1
+          created_at: '2020-09-04T14:05:35.000000Z'
+          updated_at: '2020-09-04T14:05:35.000000Z'
+          caption: maths
+          subjects:
+            - id: 1
+              created_at: '2020-09-04T14:24:42.000000Z'
+              caption: subject of maths 1
+              group_id: 1
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        caption:
+          type: string
+        subjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subject'

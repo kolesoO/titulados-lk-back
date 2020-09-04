@@ -42,6 +42,14 @@ class OrderRepository extends Base
         return $result;
     }
 
+    public function findForUser(int $id, HasUserType $user): ?Order
+    {
+        /** @var Order|null $result */
+        $result = $user->orders()->find($id);
+
+        return $result;
+    }
+
     public function save(Order $entity, array $options = []): bool
     {
         return $entity->save($options);

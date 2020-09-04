@@ -56,4 +56,5 @@ return [
 
     ],
 
+    'channels.front' => 'users.{id}',
 ];
