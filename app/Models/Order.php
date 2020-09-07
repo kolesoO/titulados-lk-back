@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Contracts\Models\HasOrderStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Carbon $deadline
  * @property-read string $name
  * @property int $status
- * @property-read string $type
+ * @property-read Subject $subject
  * @property-read string $course
  * @property-read string $description
  * @property-read float $price
@@ -35,6 +34,16 @@ class Order extends Model implements HasOrderStatus
         'deadline', 'name', 'type', 'course',
         'description', 'price',
     ];
+
+    /** @inheritDoc */
+    protected $filterable = [
+        'name', 'status',
+    ];
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class, 'subject_id');
+    }
 
     public function parts(): HasMany
     {

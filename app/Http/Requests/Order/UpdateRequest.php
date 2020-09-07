@@ -13,7 +13,6 @@ class UpdateRequest extends Request
         return [
             'deadline' => 'required|string',
             'name' => 'required|string',
-            'type' => 'required|string',
             'course' => 'required|string',
             'description' => 'required|string',
             'price' => 'required',

@@ -432,7 +432,12 @@ paths:
                         updated_at: '2020-08-30T09:42:37.000000Z'
                         deadline: '2020-08-29 12:44:48'
                         name: name value
-                        type: type value
+                        subject_id: 1
+                        subject:
+                          id: 1
+                          created_at: '2020-09-05T08:32:16.000000Z'
+                          caption: Авиационная и ракетно-космическая техника
+                          group_id: 1
                         course: course value
                         description: description value
                         price: 1000
@@ -495,6 +500,21 @@ paths:
                         readiness: 75
       operationId: get-api-v1-my-orders
       description: Get order list for user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: array
+                  items: {}
+            examples:
+              example:
+                value:
+                  filter:
+                    name: some name
+                    status: 0
     post:
       summary: Create order
       operationId: post-api-v1-my-orders
@@ -514,7 +534,12 @@ paths:
                     data:
                       deadline: '2020-08-29 12:44:48'
                       name: name value 3
-                      type: type value
+                      subject_id: 1
+                      subject:
+                        id: 1
+                        created_at: '2020-09-05T08:32:16.000000Z'
+                        caption: Авиационная и ракетно-космическая техника
+                        group_id: 1
                       course: course value
                       description: description value
                       price: '2000'
@@ -560,20 +585,20 @@ paths:
                   type: string
                 name:
                   type: string
-                type:
-                  type: string
                 course:
                   type: string
                 description:
                   type: string
                 price:
                   type: string
+                subject_id:
+                  type: integer
             examples:
               example:
                 value:
                   deadline: '2020-08-29 12:44:48'
                   name: name value
-                  type: type value
+                  subject_id: 1
                   course: course value
                   description: description value
                   price: '1000'
@@ -860,6 +885,219 @@ paths:
               example:
                 value:
                   caption: some caption
+  /api/v1/my/orders/available:
+    get:
+      summary: Get available orders for user
+      tags:
+        - orders
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+              examples:
+                example:
+                  value:
+                    data:
+                      - id: 1
+                        created_at: '2020-08-30T09:42:37.000000Z'
+                        updated_at: '2020-08-30T09:42:37.000000Z'
+                        deadline: '2020-08-29 12:44:48'
+                        name: name value
+                        subject_id: 1
+                        subject:
+                          id: 1
+                          created_at: '2020-09-05T08:32:16.000000Z'
+                          caption: Авиационная и ракетно-космическая техника
+                          group_id: 1
+                        course: course value
+                        description: description value
+                        price: 1000
+                        student_id: 1
+                        teacher_id: null
+                        parts:
+                          - id: 1
+                            created_at: '2020-08-30T09:42:37.000000Z'
+                            updated_at: '2020-08-30T09:42:37.000000Z'
+                            name: 1 часть
+                            status_message: some message
+                            status: 0
+                            order_id: 1
+                            docs: []
+                        files: []
+                        readiness: 75
+                      - id: 2
+                        created_at: '2020-08-30T09:43:34.000000Z'
+                        updated_at: '2020-08-30T09:43:34.000000Z'
+                        deadline: '2020-08-29 12:44:48'
+                        name: name value 2
+                        type: type value
+                        course: course value
+                        description: description value
+                        price: 2000
+                        student_id: 1
+                        teacher_id: null
+                        parts:
+                          - id: 2
+                            created_at: '2020-08-30T09:43:34.000000Z'
+                            updated_at: '2020-08-30T09:43:34.000000Z'
+                            name: 1 часть
+                            status: 0
+                            status_message: some message
+                            order_id: 2
+                            docs: []
+                        files: []
+                        readiness: 75
+                      - id: 3
+                        created_at: '2020-08-30T09:47:51.000000Z'
+                        updated_at: '2020-08-30T09:47:51.000000Z'
+                        deadline: '2020-08-29 12:44:48'
+                        name: name value 3
+                        type: type value
+                        course: course value
+                        description: description value
+                        price: 2000
+                        student_id: 1
+                        teacher_id: null
+                        parts:
+                          - id: 3
+                            created_at: '2020-08-30T09:47:51.000000Z'
+                            updated_at: '2020-08-30T09:47:51.000000Z'
+                            name: 1 часть
+                            status: 0
+                            status_message: some message
+                            order_id: 3
+                            docs: []
+                        files: []
+                        readiness: 75
+      operationId: get-api-v1-my-orders-available
+  '/api/v1/my/orders/{orderId}/accept':
+    parameters:
+      - schema:
+          type: string
+        name: orderId
+        in: path
+        required: true
+    post:
+      summary: Accept the order
+      tags:
+        - orders
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Order'
+              examples:
+                example:
+                  value:
+                    data:
+                      deadline: '2020-08-29 12:44:48'
+                      name: name value 2
+                      subject_id: 1
+                      subject:
+                        id: 1
+                        created_at: '2020-09-05T08:32:16.000000Z'
+                        caption: Авиационная и ракетно-космическая техника
+                        group_id: 1
+                      course: course value
+                      description: description value
+                      price: '2000'
+                      student_id: 1
+                      updated_at: '2020-08-30T09:43:34.000000Z'
+                      created_at: '2020-08-30T09:43:34.000000Z'
+                      id: 2
+                      student:
+                        id: 1
+                        university: null
+                        course: null
+                        user_id: 1
+                      parts:
+                        - id: 2
+                          created_at: '2020-08-30T09:43:34.000000Z'
+                          updated_at: '2020-08-30T09:43:34.000000Z'
+                          name: 1 часть
+                          status: 0
+                          status_message: some message
+                          order_id: 2
+                          docs: []
+                      files: []
+                      readiness: 75
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example:
+                  value:
+                    message: Order already accepted
+      operationId: post-api-v1-my-orders-orderId-accept
+  '/api/v1/my/orders/{orderId}/parts/{partId}/accept':
+    parameters:
+      - schema:
+          type: string
+        name: orderId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: partId
+        in: path
+        required: true
+    post:
+      summary: Accept order part
+      tags:
+        - orders
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OrderPart'
+              examples:
+                example:
+                  value:
+                    data:
+                      id: 1
+                      created_at: '2020-09-05T08:32:16.000000Z'
+                      updated_at: '2020-09-06T10:13:32.000000Z'
+                      name: 1 часть
+                      status: 2
+                      order_id: 1
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                example:
+                  value:
+                    message: Order part already accepted
+      operationId: post-api-v1-my-orders-orderId-parts-partId-accept
 components:
   schemas:
     User:
@@ -920,7 +1158,12 @@ components:
         example:
           deadline: '2020-08-29 12:44:48'
           name: name value 2
-          type: type value
+          subject_id: 1
+          subject:
+            id: 1
+            created_at: '2020-09-05T08:32:16.000000Z'
+            caption: Авиационная и ракетно-космическая техника
+            group_id: 1
           course: course value
           description: description value
           price: '2000'
@@ -1025,3 +1268,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Subject'
+    OrderPart:
+      title: OrderPart
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        name:
+          type: string
+        status:
+          type: integer
+        order_id:
+          type: integer
+      x-examples:
+        example:
+          id: 1
+          created_at: '2020-09-05T08:32:16.000000Z'
+          updated_at: '2020-09-06T10:13:32.000000Z'
+          name: 1 часть
+          status: 2
+          order_id: 1

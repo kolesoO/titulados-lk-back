@@ -26,9 +26,28 @@ class OrderRepository extends Base
     /**
      * @return Collection|Order[]
      */
-    public function getForUser(HasUserType $user): Collection
+    public function getForUser(HasUserType $user, array $filter = []): Collection
     {
-        return $user->orders()->get();
+        $builder = $user->orders()->getQuery();
+
+        return $this->getQueryByFilter($builder, $filter)->get();
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getAvailableForUser(HasUserType $user, array $filter = []): Collection
+    {
+        if ($user->availableOrdersForeignKey()) {
+            $builder = Order::query()
+                ->whereNull(
+                    $user->availableOrdersForeignKey()
+                );
+
+            return $this->getQueryByFilter($builder, $filter)->get();
+        }
+
+        return Collection::make([]);
     }
 
     /**
@@ -42,7 +61,7 @@ class OrderRepository extends Base
         return $result;
     }
 
-    public function findForUser(int $id, HasUserType $user): ?Order
+    public function findByIdForUser(int $id, HasUserType $user): ?Order
     {
         /** @var Order|null $result */
         $result = $user->orders()->find($id);

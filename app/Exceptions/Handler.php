@@ -2,6 +2,8 @@
 
 namespace App\Exceptions;
 
+use \App\DTO\SingleMessage;
+use App\Resources\DefaultResource;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -57,7 +59,9 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ModelNotFoundException && $request->wantsJson()) {
             return new JsonResponse(
-                ['message' => $exception->getMessage()], //TODO: придумать что-то с сообщением
+                DefaultResource::make(
+                    new SingleMessage($exception->getMessage())
+                )->resolve(),
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -69,7 +73,9 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         return new JsonResponse(
-            $exception->getMessage(),
+            DefaultResource::make(
+                new SingleMessage($exception->getMessage())
+            )->resolve(),
             Response::HTTP_UNAUTHORIZED
         );
     }

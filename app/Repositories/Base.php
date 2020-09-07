@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Models\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use ReflectionClass;
 use ReflectionException;
@@ -14,7 +15,7 @@ abstract class Base
 {
     protected string $modelClass;
 
-    /** @var Model */
+    /** @var BaseModel */
     protected $modelInstance;
 
     /**
@@ -26,7 +27,7 @@ abstract class Base
         $this->modelInstance = $reflection->newInstance();
     }
 
-    public function getModelInstance(): Model
+    public function getModelInstance(): BaseModel
     {
         return $this->modelInstance;
     }
@@ -36,7 +37,7 @@ abstract class Base
         return $this->modelInstance->newQuery();
     }
 
-    public function find(int $id): ?Model
+    public function find(int $id): ?BaseModel
     {
         return $this->newQuery()->find($id);
     }
@@ -44,8 +45,31 @@ abstract class Base
     /**
      * @throws ModelNotFoundException
      */
-    public function getById(int $id): Model
+    public function getById(int $id): BaseModel
     {
         return $this->newQuery()->findOrFail($id);
+    }
+
+    public function getQueryByFilter(Builder $builder, array $filter = []): Builder
+    {
+        if (!$this->modelInstance instanceof Model) {
+            return $builder;
+        }
+
+        foreach ($filter as $key => $value) {
+            if (!in_array($key, $this->modelInstance->getFilterable())) {
+                continue;
+            }
+
+            if (is_array($value)) {
+                $builder->whereIn($key, $value);
+
+                continue;
+            }
+
+            $builder->where($key, $value);
+        }
+
+        return $builder;
     }
 }

@@ -47,7 +47,7 @@ class CreateMessage implements ShouldQueue
             return;
         }
 
-        $order = $orderRepository->findForUser(
+        $order = $orderRepository->findByIdForUser(
             $this->orderId,
             $userRepository->getTypeModel($user)
         );

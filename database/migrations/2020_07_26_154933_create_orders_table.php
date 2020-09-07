@@ -19,12 +19,16 @@ class CreateOrdersTable extends Migration
             $table->timestamp('deadline')->nullable();
             $table->string('name')->nullable();
             $table->integer('status')->nullable();
-            $table->string('type')->nullable();
+            $table->unsignedInteger('subject_id')->nullable();
             $table->string('course')->nullable();
             $table->text('description')->nullable();
             $table->float('price')->nullable();
             $table->unsignedInteger('student_id')->nullable();
             $table->unsignedInteger('teacher_id')->nullable();
+
+            $table->foreign('subject_id')
+                ->references('id')
+                ->on('subjects');
 
             $table->foreign('student_id')
                 ->references('id')

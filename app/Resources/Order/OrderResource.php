@@ -6,6 +6,7 @@ namespace App\Resources\Order;
 
 use App\Models\Order;
 use App\Models\OrderPart;
+use App\Resources\DefaultResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,6 +22,7 @@ class OrderResource extends JsonResource
         return array_merge(
             parent::toArray($request),
             [
+                'subject' => DefaultResource::make($this->resource->subject),
                 'parts' => OrderPartResource::collection($orderParts),
                 'files' => OrderFileResource::collection(
                     $this->resource->files
@@ -38,6 +40,6 @@ class OrderResource extends JsonResource
             })
             ->count();
 
-        return (int) round($doneCount / $orderParts->count()) * 100;
+        return (int) round($doneCount / $orderParts->count() * 100);
     }
 }
