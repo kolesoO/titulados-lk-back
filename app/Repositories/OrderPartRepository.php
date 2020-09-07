@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\OrderPart;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderPartRepository extends Base
@@ -29,10 +30,36 @@ class OrderPartRepository extends Base
     /**
      * @throws ModelNotFoundException
      */
+    public function getFirstForOrder(Order $order): OrderPart
+    {
+        /** @var OrderPart $result */
+        $result = $order->parts()->firstOrFail();
+
+        return $result;
+    }
+
+    /**
+     * @throws ModelNotFoundException
+     */
     public function getByIdForOrder(int $id, Order $order): OrderPart
     {
+        /** @var OrderPart $result */
         $result = $order->parts()->findOrFail($id);
 
         return $result;
+    }
+
+    public function getPreviousForOrder(OrderPart $orderPart, Order $order): Collection
+    {
+        return $order->parts()
+            ->where('id', '<', $orderPart->id)
+            ->get();
+    }
+
+    public function getNextForOrder(OrderPart $orderPart, Order $order): Collection
+    {
+        return $order->parts()
+            ->where('id', '>', $orderPart->id)
+            ->get();
     }
 }

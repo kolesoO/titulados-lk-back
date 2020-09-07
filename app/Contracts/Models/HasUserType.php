@@ -12,4 +12,6 @@ interface HasUserType
     public function user(): BelongsTo;
 
     public function orders(): HasMany;
+
+    public function availableOrdersForeignKey(): ?string;
 }

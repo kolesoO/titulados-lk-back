@@ -20,6 +20,7 @@ Route::middleware('auth:api')
             Route::group(['prefix' => 'subject-group'], function (Router $router) {
                 $router->get('', 'SubjectGroupController@index');
                 $router->post('', 'SubjectGroupController@store');
+
                 $router->group(['prefix' => '{groupId}'], function (Router $router) {
                     $router->get('', 'SubjectGroupController@show');
 
@@ -33,15 +34,21 @@ Route::middleware('auth:api')
             Route::group(['prefix' => 'my', 'as' => 'my.'], function (Router $router) {
                 $router->get('orders', 'OrderController@my');
                 $router->post('orders', 'OrderController@storeMy');
+                $router->get('orders/available', 'OrderController@availableMy');
+
                 $router->group(['prefix' => 'orders/{orderId}'], function (Router $router) {
                     $router->get('', 'OrderController@showMy');
                     $router->post('', 'OrderController@updateMy');
+                    $router->post('accept', 'OrderController@accept');
+
                     $router->group(['prefix' => 'parts'], function (Router $router) {
                         $router->group(['prefix' => '{orderPartId}'], function (Router $router) {
+                            $router->post('accept', 'OrderPartController@accept');
                             $router->get('docs', 'OrderDocController@my');
                             $router->post('docs', 'OrderDocController@storeMy');
                         });
                     });
+
                     $router->group(['prefix' => 'messages'], function (Router $router) {
                         $router->post('', 'MessageController@store');
                     });

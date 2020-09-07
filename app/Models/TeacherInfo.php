@@ -24,13 +24,21 @@ class TeacherInfo extends Model implements HasUserType
     /** @inheritDoc */
     protected $fillable = ['id'];
 
+    /** @inheritDoc */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /** @inheritDoc */
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class, 'teacher_id');
+    }
+
+    /** @inheritDoc */
+    public function availableOrdersForeignKey(): ?string
+    {
+        return 'teacher_id';
     }
 }
