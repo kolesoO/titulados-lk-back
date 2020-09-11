@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\OrderDoc;
+namespace App\Http\Requests\OrderPartDoc;
 
 use App\Http\Requests\Request;
 

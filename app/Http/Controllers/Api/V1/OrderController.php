@@ -13,7 +13,7 @@ use App\Http\Requests\Order\UpdateRequest;
 use App\Models\Order;
 use App\Models\User;
 use App\Repositories\FileRepository;
-use App\Repositories\OrderFileRepository;
+use App\Repositories\OrderDocRepository;
 use App\Repositories\OrderPartRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\SubjectRepository;
@@ -109,7 +109,7 @@ class OrderController
     public function storeMy(
         StoreRequest $request,
         OrderPartRepository $orderPartRepository,
-        OrderFileRepository $orderFileRepository,
+        OrderDocRepository $orderDocRepository,
         FileRepository $fileRepository,
         SubjectRepository $subjectRepository
     ): JsonResponse {
@@ -140,8 +140,8 @@ class OrderController
             $fileEntity = $fileRepository->createFromUploadedFile($file);
 
             if ($fileRepository->save($fileEntity)) {
-                $orderFileRepository->save(
-                    $orderFileRepository->create($fileEntity, $order)
+                $orderDocRepository->save(
+                    $orderDocRepository->create($fileEntity, $order)
                 );
             }
         }

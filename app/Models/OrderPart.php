@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string $name
  * @property int $status
  * @property-read Order $order
- * @property-read Collection|OrderDoc[] $docs
+ * @property-read Collection|OrderPartDoc[] $docs
  */
 class OrderPart extends Model implements HasOrderStatus
 {
@@ -28,7 +28,7 @@ class OrderPart extends Model implements HasOrderStatus
 
     public function docs(): HasMany
     {
-        return $this->hasMany(OrderDoc::class, 'order_part_id');
+        return $this->hasMany(OrderPartDoc::class, 'order_part_id');
     }
 
     public function order(): BelongsTo

@@ -35,7 +35,7 @@ class UserRepository extends Base
             [
                 'password' => Hash::make($attributes->getPassword()),
                 'settings' => $this->createUserSettings(
-                    $attributes->getSettings()->toArray()
+                    $attributes->getSettings()->getArray()
                 ),
             ]
         );
