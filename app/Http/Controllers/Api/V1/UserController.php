@@ -10,7 +10,7 @@ use App\Http\Requests\User\ChangePwdRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 use App\Repositories\ChangePwdHistoryRepository;
-use App\Repositories\FacultyRepository;
+use App\Repositories\SubjectRepository;
 use App\Repositories\UserRepository;
 use App\Resources\UserResource;
 use Illuminate\Database\Eloquent\Model;
@@ -42,7 +42,7 @@ class UserController
             ->response($request);
     }
 
-    public function updateMe(UpdateRequest $request, FacultyRepository $facultyRepository): JsonResponse
+    public function updateMe(UpdateRequest $request, SubjectRepository $subjectRepository): JsonResponse
     {
         /** @var User $user */
         $user = $this->userRepository->getById(
@@ -59,7 +59,7 @@ class UserController
             $userAttributes->setSettings(
                 $userSettings
                     ->setFacultyIds(
-                        $facultyRepository->findByIds(
+                        $subjectRepository->findByIds(
                             $userSettings->getFacultyIds()
                         )
                             ->pluck('id')

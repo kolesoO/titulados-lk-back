@@ -32,4 +32,11 @@ class SubjectRepository extends Base
     {
         return $group->subjects;
     }
+
+    public function findByIds(array $ids): Collection
+    {
+        return $this->newQuery()
+            ->whereIn('id', $ids)
+            ->get();
+    }
 }
