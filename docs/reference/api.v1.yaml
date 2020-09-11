@@ -1199,6 +1199,8 @@ components:
           type: string
         file:
           type: string
+      x-examples:
+        example-1: {}
     File:
       title: File
       type: object
@@ -1210,6 +1212,7 @@ components:
           size: 1000
           content_type: image/png
           path: /usr/local/etc.ext
+          name: file.ext
       properties:
         id:
           type: integer
@@ -1222,6 +1225,8 @@ components:
         content_type:
           type: string
         path:
+          type: string
+        name:
           type: string
     Subject:
       title: Subject

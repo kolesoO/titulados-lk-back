@@ -2,20 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api\V1;
+namespace app\Http\Controllers\Api\V1;
 
 use App\Concerns\HasAuthUser;
-use App\Http\Requests\OrderDoc\StoreRequest;
+use App\Models\OrderDoc;
 use App\Models\User;
-use App\Repositories\FileRepository;
 use App\Repositories\OrderDocRepository;
-use App\Repositories\OrderPartRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\UserRepository;
-use App\Resources\Order\OrderDocResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class OrderDocController
 {
@@ -23,89 +20,42 @@ class OrderDocController
 
     private OrderRepository $orderRepository;
 
-    private OrderPartRepository $orderPartRepository;
+    private UserRepository $userRepository;
 
     private OrderDocRepository $orderDocRepository;
 
-    private UserRepository $userRepository;
-
     public function __construct(
-        OrderPartRepository $orderPartRepository,
-        OrderDocRepository $orderDocRepository,
         OrderRepository $orderRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        OrderDocRepository $orderDocRepository
     ) {
-        $this->orderPartRepository = $orderPartRepository;
-        $this->orderDocRepository = $orderDocRepository;
         $this->orderRepository = $orderRepository;
         $this->userRepository = $userRepository;
+        $this->orderDocRepository = $orderDocRepository;
     }
 
     /**
      * @throws ModelNotFoundException
      */
-    public function my(string $orderId, string $orderPartId, Request $request): JsonResponse
+    public function show(string $orderId, string $fileId): BinaryFileResponse
     {
         /** @var User $user */
         $user = $this->userRepository->getById(
             $this->getUser()->id
         );
 
-        $order = $this->orderRepository->getByIdForUser(
+        $this->orderRepository->getByIdForUser(
             (int) $orderId,
             $this->userRepository->getTypeModel($user)
         );
 
-        $orderPart = $this->orderPartRepository->getByIdForOrder(
-            (int) $orderPartId,
-            $order
+        /** @var OrderDoc $orderFile */
+        $orderFile = $this->orderDocRepository->getById((int) $fileId);
+
+        return Response::download(
+            $orderFile->file->path,
+            basename($orderFile->file->path),
+            ['Content-Type' => 'application/octet-stream']
         );
-
-        return OrderDocResource::collection(
-            $this->orderDocRepository->getByOrderPart($orderPart)
-        )
-            ->response($request);
-    }
-
-    /**
-     * @throws ModelNotFoundException
-     */
-    public function storeMy(
-        string $orderId,
-        string $orderPartId,
-        StoreRequest $request,
-        FileRepository $fileRepository
-    ): JsonResponse {
-        /** @var User $user */
-        $user = $this->userRepository->getById(
-            $this->getUser()->id
-        );
-
-        $order = $this->orderRepository->getByIdForUser(
-            (int) $orderId,
-            $this->userRepository->getTypeModel($user)
-        );
-
-        $orderPart = $this->orderPartRepository->getByIdForOrder(
-            (int) $orderPartId,
-            $order
-        );
-
-        $fileEntity = $fileRepository->createFromUploadedFile(
-            $request->file('attachment')
-        );
-
-        $orderDoc = $this->orderDocRepository->create($fileEntity, $orderPart);
-
-        if (!$fileRepository->save($fileEntity)) {
-            throw (new ModelNotFoundException)->setModel(
-                get_class($orderDoc)
-            );
-        }
-
-        $this->orderDocRepository->save($orderDoc);
-
-        return OrderDocResource::make($orderDoc)
-            ->response($request);
     }
 }

@@ -39,13 +39,19 @@ Route::middleware('auth:api')
                 $router->group(['prefix' => 'orders/{orderId}'], function (Router $router) {
                     $router->get('', 'OrderController@showMy');
                     $router->post('', 'OrderController@updateMy');
+
                     $router->post('accept', 'OrderController@accept');
+
+                    $router->group(['prefix' => 'docs'], function (Router $router) {
+                        $router->get('{fileId}', 'OrderDocController@show');
+                    });
 
                     $router->group(['prefix' => 'parts'], function (Router $router) {
                         $router->group(['prefix' => '{orderPartId}'], function (Router $router) {
                             $router->post('accept', 'OrderPartController@accept');
-                            $router->get('docs', 'OrderDocController@my');
-                            $router->post('docs', 'OrderDocController@storeMy');
+
+                            $router->get('docs', 'OrderPartDocController@my');
+                            $router->post('docs', 'OrderPartDocController@storeMy');
                         });
                     });
 

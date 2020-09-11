@@ -15,26 +15,20 @@ class CreateOrderDocsTable extends Migration
     {
         Schema::create('order_docs', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-            $table->unsignedInteger('order_part_id')->nullable();
+            $table->timestamp('created_at')->nullable();
             $table->unsignedInteger('file_id')->nullable();
-            $table->unsignedInteger('user_id')->nullable();
-            $table->string('comment')->nullable();
-
-            $table->foreign('order_part_id')
-                ->references('id')
-                ->on('order_parts')
-                ->onDelete('cascade');
+            $table->unsignedInteger('order_id')->nullable();
 
             $table->foreign('file_id')
                 ->references('id')
                 ->on('files')
                 ->onDelete('restrict');
 
-            $table->foreign('user_id')
+            $table->foreign('order_id')
                 ->references('id')
-                ->on('users')
-                ->onDelete('restrict');
+                ->on('orders')
+                ->onDelete('cascade');
+
         });
     }
 

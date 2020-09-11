@@ -24,8 +24,8 @@ class OrderResource extends JsonResource
             [
                 'subject' => DefaultResource::make($this->resource->subject),
                 'parts' => OrderPartResource::collection($orderParts),
-                'files' => OrderFileResource::collection(
-                    $this->resource->files
+                'docs' => OrderDocResource::collection(
+                    $this->resource->docs
                 ),
                 'readiness' => $this->getOrderReadyPercent($orderParts)
             ]

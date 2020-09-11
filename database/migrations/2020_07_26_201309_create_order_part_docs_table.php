@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderFilesTable extends Migration
+class CreateOrderPartDocsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,28 @@ class CreateOrderFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_files', function (Blueprint $table) {
+        Schema::create('order_part_docs', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('created_at')->nullable();
+            $table->timestamps();
+            $table->unsignedInteger('order_part_id')->nullable();
             $table->unsignedInteger('file_id')->nullable();
-            $table->unsignedInteger('order_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
+            $table->string('comment')->nullable();
+
+            $table->foreign('order_part_id')
+                ->references('id')
+                ->on('order_parts')
+                ->onDelete('cascade');
 
             $table->foreign('file_id')
                 ->references('id')
                 ->on('files')
                 ->onDelete('restrict');
 
-            $table->foreign('order_id')
+            $table->foreign('user_id')
                 ->references('id')
-                ->on('orders')
-                ->onDelete('cascade');
-
+                ->on('users')
+                ->onDelete('restrict');
         });
     }
 
@@ -39,6 +45,6 @@ class CreateOrderFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_files');
+        Schema::dropIfExists('order_part_docs');
     }
 }

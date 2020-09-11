@@ -17,9 +17,7 @@ class OrderPartResource extends JsonResource
         return array_merge(
             parent::toArray($request),
             [
-                'docs' => OrderDocResource::collection(
-                    $this->resource->docs
-                ),
+                'docs' => OrderPartDocResource::collection($this->resource->docs),
                 'status_message' => trans('order_part.status.' . $this->resource->status),
             ]
         );

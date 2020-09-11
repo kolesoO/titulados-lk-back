@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read StudentInfo $student
  * @property-read TeacherInfo $teacher
  * @property-read Collection|OrderPart[] $parts
- * @property-read Collection|OrderFile[] $files
+ * @property-read Collection|OrderDoc[] $docs
  */
 class Order extends Model implements HasOrderStatus
 {
@@ -50,9 +50,9 @@ class Order extends Model implements HasOrderStatus
         return $this->hasMany(OrderPart::class, 'order_id');
     }
 
-    public function files(): HasMany
+    public function docs(): HasMany
     {
-        return $this->hasMany(OrderFile::class, 'order_id');
+        return $this->hasMany(OrderDoc::class, 'order_id');
     }
 
     public function student(): BelongsTo

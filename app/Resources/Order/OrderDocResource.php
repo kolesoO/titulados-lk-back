@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Resources\Order;
 
 use App\Models\OrderDoc;
-use App\Resources\DefaultResource;
+use App\Resources\FileResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderDocResource extends JsonResource
@@ -18,7 +18,7 @@ class OrderDocResource extends JsonResource
         return array_merge(
             parent::toArray($request),
             [
-                'file' => DefaultResource::make(
+                'file' => FileResource::make(
                     $this->resource->file
                 )
             ]

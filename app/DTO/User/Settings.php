@@ -21,6 +21,7 @@ class Settings implements Arrayable
         $this->facultyIds = (array) ($settings['faculties'] ?? []);
     }
 
+    /** @inheritDoc */
     public function toArray()
     {
         $result = [];
